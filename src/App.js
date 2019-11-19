@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import {Oscilloscope} from "./Oscilloscope";
 import './mks.css'
+import {Dashboard} from "./Dashboard";
+import './css/bootstrap/dist/css/bootstrap.min.css'
+import './css/fontawesome/css/font-awesome.min.css'
+import Buffer from "./Buffer";
 
-// const url = "http://localhost:5000"
-const url = "https://secure-hamlet-60495.herokuapp.com"
+const url = "http://localhost:5000"
+// const url = "https://secure-hamlet-60495.herokuapp.com"
 
 class App extends Component {
+  buffer = new Buffer(25)
   constructor(props) {
     super(props);
     this.state = {
-      oscilloscopeData: [
-        {x: 1, y: 3, z: 10},
-        {x: 2, y: 4, z: 10},
-        {x: 3, y: 8, z: 10},
-        {x: 4, y: 11, z: 10}
-      ]
+      oscilloscopeData: this.buffer.get()
     };
     this.eventSource = new EventSource(`${url}/events`);
   }
@@ -23,15 +23,24 @@ class App extends Component {
     this.eventSource.addEventListener('mks-event', (e) => this.updateOscilloscope(JSON.parse(e.data)));
     this.eventSource.addEventListener('closedConnection', () => this.stopUpdates());
   }
+  componentWillUnmount() {
+    this.eventSource.close()
+  }
 
   updateOscilloscope(data) {
-    data = [
-      {x:0, y:10},
-      {x:0, y:-10},
-      ...data
+    this.buffer.push(data)
+    console.log(this.buffer.get())
+    const d = [
+      {
+        x: 0, y: -10, z: 10
+      },
+      {
+        x: 0, y: 10, z: 10
+      },
+        ...this.buffer.get()
     ]
     this.setState({
-      oscilloscopeData: data
+      oscilloscopeData: d
     })
   }
 
@@ -41,8 +50,15 @@ class App extends Component {
 
   render() {
     return (
-        <div className="App">
-          <Oscilloscope data={this.state.oscilloscopeData}/>
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-10">
+              <Oscilloscope data={this.state.oscilloscopeData}/>
+            </div>
+            <div className="col-2">
+              <Dashboard/>
+            </div>
+          </div>
         </div>
     );
   }
