@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Oscilloscope} from "./Oscilloscope";
-import './hhh.css'
+import './mks.css'
 
 // const url = "http://localhost:5000"
 const url = "https://secure-hamlet-60495.herokuapp.com"
@@ -20,7 +20,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.eventSource.addEventListener('ddd', (e) => this.updateOscilloscope(JSON.parse(e.data)));
+    this.eventSource.addEventListener('mks-event', (e) => this.updateOscilloscope(JSON.parse(e.data)));
     this.eventSource.addEventListener('closedConnection', () => this.stopUpdates());
   }
 
