@@ -1,3 +1,7 @@
+import utilities from "../utils/utilities";
+
+const baseUrl = utilities.getBaseUrl();
+
 export default class OsciloscopeService {
     static instance = null
     static getInstance() {
@@ -6,8 +10,19 @@ export default class OsciloscopeService {
         }
         return this.instance
     }
-    updateOsciloscope = (oscilloscopeConfig) =>
-        fetch(`http://localhost:5000/api/oscilloscope`, {
+
+    static pause = () =>
+        fetch(`${baseUrl}/api/oscilloscope/pause`, {
+            method: 'post'
+        }).then(response => response.json())
+
+    static play = () =>
+        fetch(`${baseUrl}/api/oscilloscope/play`, {
+            method: 'post'
+        }).then(response => response.json())
+
+    static updateOsciloscope = (oscilloscopeConfig) =>
+        fetch(`${baseUrl}/api/oscilloscope`, {
             method: 'put',
             body: JSON.stringify(oscilloscopeConfig),
             headers: {

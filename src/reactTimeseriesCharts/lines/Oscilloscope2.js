@@ -14,6 +14,7 @@ import React from "react";
 import {TimeEvent, Stream, TimeSeries, TimeRange} from "pondjs";
 import Ring from 'ringjs'
 import utilities from "../../utils/utilities";
+import oscilloscopeService from '../../services/OsciloscopeService'
 
 import {ChartContainer, ChartRow, Charts, YAxis, LineChart, Baseline, Resizable} from "react-timeseries-charts";
 
@@ -98,45 +99,25 @@ export default class Oscilloscope2 extends React.Component {
         return new TimeEvent(t, parseInt(base * 700 + 700, 10));
     };
 
-    updateOscilloscope = (data) => {
-        const increment = minute;
-
-        if(!this.state.paused) {
-            const t = new Date(this.state.time.getTime() + increment);
+    updateOscilloscope = (data) =>
+        this.setState(prevState => {
+            const increment = minute;
+            const t = new Date(prevState.time.getTime() + increment);
             const event = this.getNewEvent(t, data);
-
-            // Raw events
-            const newEvents = this.state.events;
-            newEvents.push(event);
-            this.setState({time: t, events: newEvents});
-
-            // Let our aggregators process the event
             this.stream.addEvent(event);
-        }
-    }
+            const newEvents = prevState.events;
+            newEvents.push(event);
+            return {
+                time: t,
+                events: newEvents
+            }
+        });
 
     componentDidMount() {
         this.eventSource.addEventListener('mks-event', (e) => this.updateOscilloscope(JSON.parse(e.data)));
         // this.eventSource.addEventListener('closedConnection', () => this.stopUpdates());
 
         this.stream = new Stream();
-
-        // const increment = minute;
-        // this.interval = setInterval(() => {
-        //     if(!this.state.paused) {
-        //         const t = new Date(this.state.time.getTime() + increment);
-        //         const event = this.getNewEvent(t);
-        //
-        //         // Raw events
-        //         const newEvents = this.state.events;
-        //         newEvents.push(event);
-        //         this.setState({time: t, events: newEvents});
-        //
-        //         // Let our aggregators process the event
-        //         this.stream.addEvent(event);
-        //     }
-        // }, rate);
-
     }
 
     componentWillUnmount() {
@@ -159,10 +140,16 @@ export default class Oscilloscope2 extends React.Component {
         })
     }
 
-    pause = () =>
+    pause = () => {
+        if(this.state.paused) {
+            oscilloscopeService.play()
+        } else {
+            oscilloscopeService.pause()
+        }
         this.setState(prevState => ({
             paused: !prevState.paused
         }))
+    }
 
     left = () => {}
 
