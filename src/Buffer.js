@@ -1,9 +1,9 @@
 
 export default class Buffer {
 
-    index = 0
-    data = []
-    length = -1
+    index = 0;
+    data = [];
+    length = -1;
     constructor(initialSize) {
         for(let i=0; i<initialSize; i++){
             this.data.push({

@@ -5,10 +5,14 @@ import {Dashboard} from "./Dashboard";
 import './css/bootstrap/dist/css/bootstrap.min.css'
 import './css/fontawesome/css/font-awesome.min.css'
 import Buffer from "./Buffer";
+import OscilloscopeTimeseriesCharts from "./oscilloscope/OscilloscopeTimeseriesCharts";
+import Cycling from "./reactTimeseriesCharts/cycling/Cycling";
+import LineChartExample from "./reactTimeseriesCharts/lines/LineChartExample";
+import BaseLineExample from "./reactTimeseriesCharts/lines/BaseLineExample";
 import Oscilloscope2 from "./reactTimeseriesCharts/lines/Oscilloscope2";
 
-const url = "http://localhost:5000"
-// const url = "https://secure-hamlet-60495.herokuapp.com"
+// const url = "http://localhost:5000"
+const url = "https://secure-hamlet-60495.herokuapp.com"
 
 class App extends Component {
   buffer = new Buffer(25)
@@ -31,8 +35,8 @@ class App extends Component {
   updateOscilloscope(data) {
     this.buffer.push(data);
     const d = [
-      // { x: 0, y: -10, z: 10 },
-      // { x: 0, y: 10, z: 10  },
+      { x: 0, y: -10, z: 10 },
+      { x: 0, y: 10, z: 10  },
         ...this.buffer.get()
     ];
     this.setState({
