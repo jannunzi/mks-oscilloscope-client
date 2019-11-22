@@ -50,13 +50,8 @@ class App extends Component {
           <div className="row">
             <div className="col-10">
               <Oscilloscope2 data={this.state.oscilloscopeData}/>
-              {/*{window.location.href}*/}
-              {/*{process.env.REACT_APP_TEST_VAR}*/}
-              {/*<OscilloscopeTimeseriesCharts/>*/}
-              {/*<OscilloscopeVis data={this.state.oscilloscopeData}/>*/}
             </div>
             <div className="col-2">
-              <Dashboard/>
             </div>
           </div>
         </div>
