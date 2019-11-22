@@ -79,7 +79,8 @@ export default class Oscilloscope2 extends React.Component {
             time: new Date(2015, 0, 1),
             events: new Ring(200),
             window: 1,
-            paused: false
+            paused: false,
+            offset: 0
         }
 
         this.eventSource = new EventSource(`${url}/events`);
@@ -135,7 +136,7 @@ export default class Oscilloscope2 extends React.Component {
     shrink = () => {
         this.setState(prevState => {
             return {
-                window: --prevState.window
+                window: prevState.window > 1 ? --prevState.window : prevState.window
             }
         })
     }
@@ -151,9 +152,21 @@ export default class Oscilloscope2 extends React.Component {
         }))
     }
 
-    left = () => {}
+    left = () => {
+        this.setState(prevState => {
+            return {
+                offset: prevState.offset - 500000
+            }
+        })
+    }
 
-    right = () => {}
+    right = () => {
+        this.setState(prevState => {
+            return {
+                offset: prevState.offset + 500000
+            }
+        })
+    }
 
     render() {
         const eventSeries = new TimeSeries({
@@ -172,6 +185,10 @@ export default class Oscilloscope2 extends React.Component {
         } else {
             beginTime = new Date(endTime.getTime() - timeWindow);
         }
+
+        endTime.setTime(endTime.getTime() + this.state.offset)
+        beginTime.setTime(beginTime.getTime() + this.state.offset)
+
         const timeRange = new TimeRange(beginTime, endTime);
 
         return (
@@ -184,7 +201,9 @@ export default class Oscilloscope2 extends React.Component {
                 &nbsp;
                 <button className="btn btn-primary" onClick={this.widen}><i className="fa fa-search-minus"></i></button>
                 &nbsp;
-                <button className="btn btn-primary" onClick={this.shrink}><i className="fa fa-search-plus"></i></button>
+                <button className="btn btn-primary" onClick={() => this.setState({window: 1})}>100%</button>
+                &nbsp;
+                <button className="btn btn-primary" disabled={this.state.window <= 1} onClick={this.shrink}><i className="fa fa-search-plus"></i></button>
                 &nbsp;
                 <button className="btn btn-success" onClick={this.left}><i className="fa fa-fast-backward"></i></button>
                 &nbsp;
