@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
-import {OscilloscopeVis} from "./oscilloscope/OscilloscopeVis";
 import './mks.css'
-import {Dashboard} from "./Dashboard";
 import './css/bootstrap/dist/css/bootstrap.min.css'
 import './css/fontawesome/css/font-awesome.min.css'
 import Buffer from "./Buffer";
 import Oscilloscope2 from "./reactTimeseriesCharts/lines/Oscilloscope2";
+import {Link, Route, BrowserRouter as Router} from "react-router-dom";
+import LoginComponent from "./components/LoginComponent";
+import RegisterComponent from "./components/RegisterComponent";
+import UserReducer from "./reducers/UserReducer"
+import {createStore} from "redux";
+import {Provider} from "react-redux";
+import UserListContainer from "./containers/UserListContainer";
+
+const store = createStore(UserReducer)
 
 const url = "http://localhost:5000"
 // const url = "https://secure-hamlet-60495.herokuapp.com"
@@ -47,13 +54,19 @@ class App extends Component {
   render() {
     return (
         <div className="container-fluid">
-          <div className="row">
-            <div className="col-10">
-              <Oscilloscope2 data={this.state.oscilloscopeData}/>
-            </div>
-            <div className="col-2">
-            </div>
-          </div>
+          <Provider store={store}>
+            <Router>
+              <Link to="/login">Login</Link> |
+              <Link to="/register">Register</Link> |
+              <Link to="/admin/users">Users</Link> |
+              <Link to="/oscilloscope">Oscilloscope</Link>
+              <Route path="/oscilloscope" render={() => (<Oscilloscope2 data={this.state.oscilloscopeData}/>)}/>
+              <Route path="/login" component={LoginComponent}/>
+              <Route path="/register" component={RegisterComponent}/>
+              <Route path="/admin/users" component={UserListContainer}/>
+              <Route exact path="/" component={LoginComponent} />
+            </Router>
+          </Provider>
         </div>
     );
   }
