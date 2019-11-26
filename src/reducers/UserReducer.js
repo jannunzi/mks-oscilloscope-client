@@ -8,6 +8,16 @@ const userReducers = (state = {users: []}, action) => {
             return {
                 users: action.users
             }
+        case "LOGIN":
+        case "LOGOUT":
+        case "REGISTER":
+            return {
+                response: action.response
+            }
+        case "PROFILE":
+            return {
+                currentUser: action.currentUser
+            }
         default:
             return {
                 users: []

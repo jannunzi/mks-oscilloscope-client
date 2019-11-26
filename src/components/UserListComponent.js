@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from "react-router-dom";
 
 export default class UserListComponent extends React.Component{
     constructor(props) {
@@ -41,9 +42,11 @@ export default class UserListComponent extends React.Component{
                         </div>
                     </li>
                     {
-                        this.props.users.map(user =>
+                        this.props.users && this.props.users.map(user =>
                             <li key={user._id} className="list-group-item">
-                                {user.username}
+                                <Link to={`/profile/${user._id}`}>
+                                    {user.username}
+                                </Link>
                                 <button className="btn btn-danger pull-right">
                                     <i onClick={(e) => this.props.removeUser(user._id)} className="fa fa-remove"></i>
                                 </button>

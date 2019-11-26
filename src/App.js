@@ -11,6 +11,7 @@ import UserReducer from "./reducers/UserReducer"
 import {createStore} from "redux";
 import {Provider} from "react-redux";
 import UserListContainer from "./containers/UserListContainer";
+import ProfileComponent from "./components/ProfileComponent";
 
 const store = createStore(UserReducer)
 
@@ -58,11 +59,13 @@ class App extends Component {
             <Router>
               <Link to="/login">Login</Link> |
               <Link to="/register">Register</Link> |
+              <Link to="/profile">Profile</Link> |
               <Link to="/admin/users">Users</Link> |
               <Link to="/oscilloscope">Oscilloscope</Link>
               <Route path="/oscilloscope" render={() => (<Oscilloscope2 data={this.state.oscilloscopeData}/>)}/>
               <Route path="/login" component={LoginComponent}/>
               <Route path="/register" component={RegisterComponent}/>
+              <Route path="/profile" component={ProfileComponent}/>
               <Route path="/admin/users" component={UserListContainer}/>
               <Route exact path="/" component={LoginComponent} />
             </Router>
