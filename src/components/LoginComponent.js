@@ -2,6 +2,7 @@ import React from 'react'
 import {Link, Redirect} from "react-router-dom";
 import UserService from "../services/UserService";
 import {connect} from "react-redux";
+import {login} from "../actions/users";
 
 const stateToPropertyMapper = (state) => {
     return {
@@ -12,10 +13,7 @@ const stateToPropertyMapper = (state) => {
 const dispatchToPropertyMapper = (dispatch) => ({
     login: (user) =>
         UserService.login(user)
-            .then((response) => dispatch({
-                type: 'LOGIN',
-                response: response
-            }))
+            .then((response) => dispatch(login(response)))
 })
 
 class LoginComponent extends React.Component {
@@ -32,7 +30,7 @@ class LoginComponent extends React.Component {
         this.setState(update)
 
     render() {
-        if(this.props.response && this.props.response.length > 0) {
+        if(this.props.response) {
             return <Redirect to='/profile' />
         }
         return(

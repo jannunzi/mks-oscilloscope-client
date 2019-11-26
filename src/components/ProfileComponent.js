@@ -47,10 +47,6 @@ class ProfileComponent extends React.Component {
         this.setState(state)
 
     render() {
-        // console.log(this.props.response)
-        // if(typeof this.props.response === 'undefined') {
-        //     return <Redirect to="/login"/>
-        // }
         return(
             <div className="mks mks-form">
                 <h1>Profile</h1>
